@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MesExerciseREST.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MesExerciseREST.Controllers
 {
@@ -6,6 +7,12 @@ namespace MesExerciseREST.Controllers
     [Route("apiv1")]
     public class ExampleItemController : Controller
     {
+        ExampleItemInterface _interface;
+        public ExampleItemController(ExampleItemInterface inter)
+        {
+            _interface = inter;
+        }
+
         [Route("GetItemByKey/{key}")]
         [HttpGet]
         public ActionResult<ExampleItem> GetItemByKey(string key)
