@@ -7,7 +7,7 @@ namespace MesExerciseREST.Controllers
     [Route("apiv1")]
     public class ExampleItemController : Controller
     {
-        EntitiyFrameworkInterface _interface;
+        InterfaceBase _interface;
         public ExampleItemController(EntitiyFrameworkInterface inter)
         {
             _interface = inter;
