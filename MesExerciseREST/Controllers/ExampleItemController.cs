@@ -17,7 +17,14 @@ namespace MesExerciseREST.Controllers
         [HttpGet]
         public ActionResult<ExampleItem> GetItemByKey(string key)
         {
-            return Ok(_interface.GetItem(key));
+            if (_interface.DoesItemExist(key))
+            {
+                return Ok(_interface.GetItem(key));
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [Route("SerchItemsByValue/{value}")]
@@ -30,22 +37,44 @@ namespace MesExerciseREST.Controllers
         [HttpPost("NewItem")]
         public ActionResult<ExampleItem> NewItem(ExampleItem NewItem)
         {
-            _interface.AddItem(NewItem);
-            return Ok(_interface.GetItem(NewItem.Key));
+            if (_interface.DoesItemExist(NewItem.Key))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _interface.AddItem(NewItem);
+                return Ok(_interface.GetItem(NewItem.Key));
+            }
         }
 
         [HttpPut("UpdateItem")]
         public ActionResult<ExampleItem> UpdateItem(ExampleItem ItemToUpdate)
         {
-            _interface.UpdateItem(ItemToUpdate);
-            return Ok(_interface.GetItem(ItemToUpdate.Key));
+            if (_interface.DoesItemExist(ItemToUpdate.Key))
+            {
+                _interface.UpdateItem(ItemToUpdate);
+                return Ok(_interface.GetItem(ItemToUpdate.Key));
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [Route("DeleteItem/{key}")]
         [HttpDelete]
         public ActionResult DeleteItem(string key)
         {
-            throw new NotImplementedException();
+            if (_interface.DoesItemExist(key))
+            {
+                _interface.DeleteItem(key);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
