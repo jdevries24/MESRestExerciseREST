@@ -7,8 +7,8 @@ namespace MesExerciseREST.Controllers
     [Route("apiv1")]
     public class ExampleItemController : Controller
     {
-        ExampleItemInterface _interface;
-        public ExampleItemController(ExampleItemInterface inter)
+        EntitiyFrameworkInterface _interface;
+        public ExampleItemController(EntitiyFrameworkInterface inter)
         {
             _interface = inter;
         }
@@ -17,7 +17,7 @@ namespace MesExerciseREST.Controllers
         [HttpGet]
         public ActionResult<ExampleItem> GetItemByKey(string key)
         {
-            throw new NotImplementedException();
+            return Ok(_interface.GetItem(key));
         }
 
         [Route("SerchItemsByValue/{value}")]
@@ -30,13 +30,15 @@ namespace MesExerciseREST.Controllers
         [HttpPost("NewItem")]
         public ActionResult<ExampleItem> NewItem(ExampleItem NewItem)
         {
-            throw new NotImplementedException();
+            _interface.AddItem(NewItem);
+            return Ok(_interface.GetItem(NewItem.Key));
         }
 
         [HttpPut("UpdateItem")]
         public ActionResult<ExampleItem> UpdateItem(ExampleItem ItemToUpdate)
         {
-            throw new NotImplementedException();
+            _interface.UpdateItem(ItemToUpdate);
+            return Ok(_interface.GetItem(ItemToUpdate.Key));
         }
 
         [Route("DeleteItem/{key}")]
