@@ -8,9 +8,9 @@ namespace MesExerciseREST.Controllers
     public class ExampleItemController : Controller
     {
         InterfaceBase _interface;
-        public ExampleItemController(SqliteInterface inter)
+        public ExampleItemController(SqliteInterface LiteInterface,EntitiyFrameworkInterface EntryInterface)
         {
-            _interface = inter;
+            _interface = LiteInterface;
         }
 
         [Route("GetItemByKey/{key}")]
@@ -23,7 +23,7 @@ namespace MesExerciseREST.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Item does not exist");
             }
         }
 
@@ -31,7 +31,7 @@ namespace MesExerciseREST.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ExampleItem>> SearchItemsByValue(string value)
         {
-            throw new NotImplementedException();
+            return Ok(_interface.SearchItemsByValue(value));
         }
 
         [HttpPost("NewItem")]
@@ -39,7 +39,7 @@ namespace MesExerciseREST.Controllers
         {
             if (_interface.DoesItemExist(NewItem.Key))
             {
-                return BadRequest();
+                return BadRequest("Item with key already exsits");
             }
             else
             {
@@ -58,7 +58,7 @@ namespace MesExerciseREST.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Item doesn't exist");
             }
         }
 
@@ -73,7 +73,7 @@ namespace MesExerciseREST.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Item Doesnt exist");
             }
         }
     }
