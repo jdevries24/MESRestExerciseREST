@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using System.ComponentModel.DataAnnotations;
 
 namespace MesExerciseREST.Interfaces
 {
@@ -63,7 +64,10 @@ namespace MesExerciseREST.Interfaces
         }
         public void DeleteItem(string key)
         {
-            throw new NotImplementedException();
+            var command = _connection.CreateCommand();
+            command.CommandText = "DELETE FROM items WHERE Key=$Key;";
+            command.Parameters.AddWithValue("Key", key);
+            command.ExecuteNonQuery();
         }
         public void UpdateItem(ExampleItem UpdatedItem)
         {
@@ -75,7 +79,19 @@ namespace MesExerciseREST.Interfaces
         }
         public IEnumerable<ExampleItem> SearchItemsByValue(string value)
         {
-            throw new NotImplementedException();
+            var command = _connection.CreateCommand();
+            command.CommandText = "SELECT * FROM items WHERE Value LIKE %$Value%;";
+            command.Parameters.AddWithValue("Value", value);
+            var reader = command.ExecuteReader();
+            List<ExampleItem> items = new List<ExampleItem>();
+            while (reader.Read())
+            {
+                ExampleItem Item = new ExampleItem();
+                Item.Key = reader.GetString(0);
+                Item.Value = reader.GetString(1);
+                items.Add(Item);
+            }
+            return items;
         }
     }
 }
