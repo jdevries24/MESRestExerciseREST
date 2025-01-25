@@ -8,7 +8,7 @@ namespace MesExerciseREST.Controllers
     public class ExampleItemController : Controller
     {
         InterfaceBase _interface;
-        public ExampleItemController(EntitiyFrameworkInterface inter)
+        public ExampleItemController(SqliteInterface inter)
         {
             _interface = inter;
         }
