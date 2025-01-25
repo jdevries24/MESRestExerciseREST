@@ -10,7 +10,7 @@ namespace MesExerciseREST.Controllers
         InterfaceBase _interface;
         public ExampleItemController(SqliteInterface LiteInterface,EntitiyFrameworkInterface EntryInterface)
         {
-            _interface = LiteInterface;
+            _interface = EntryInterface;
         }
 
         [Route("GetItemByKey/{key}")]
@@ -27,7 +27,7 @@ namespace MesExerciseREST.Controllers
             }
         }
 
-        [Route("SerchItemsByValue/{value}")]
+        [Route("SearchItemsByValue/{value}")]
         [HttpGet]
         public ActionResult<IEnumerable<ExampleItem>> SearchItemsByValue(string value)
         {
