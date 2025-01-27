@@ -8,13 +8,15 @@ namespace MesExerciseREST.Interfaces
         SqliteConnection _connection;
         public SqliteInterface()
         {
+            //opens up a SQL connection Just uses a generic file name
             _connection = new SqliteConnection("Data Source=applicationDB.db");
             _connection.Open();
-            ensureTableCreated();
+            EnsureTableCreated();
         }
 
-        private void ensureTableCreated()
+        private void EnsureTableCreated()
         {
+            /*This method assures that the table for the Items exsits. if the items table doesnt exsit it creates it*/
             var command = _connection.CreateCommand();
             command.CommandText = "SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'items'";
             var reader = command.ExecuteReader();
@@ -35,6 +37,7 @@ namespace MesExerciseREST.Interfaces
         }
         public bool DoesItemExist(string Key)
         {
+            /*Simply checks if a Item with a given key exsits*/
             var command = _connection.CreateCommand();
             command.CommandText = "SELECT count(*) FROM items WHERE Key=$Key";
             command.Parameters.AddWithValue("Key", Key);
@@ -44,6 +47,7 @@ namespace MesExerciseREST.Interfaces
         }
         public ExampleItem GetItem(string Key)
         {
+            //Pulls an Item out of the database
             var command = _connection.CreateCommand();
             command.CommandText = "SELECT * FROM items WHERE Key=$Key";
             command.Parameters.AddWithValue("Key", Key);
@@ -56,6 +60,7 @@ namespace MesExerciseREST.Interfaces
         }
         public void AddItem(ExampleItem NewItem)
         {
+            //pushes an Item into the database
             var command = _connection.CreateCommand();
             command.CommandText = "INSERT INTO items VALUES($Key,$Value);";
             command.Parameters.AddWithValue("Key", NewItem.Key);
@@ -64,6 +69,7 @@ namespace MesExerciseREST.Interfaces
         }
         public void DeleteItem(string key)
         {
+            //removes an Item from the database
             var command = _connection.CreateCommand();
             command.CommandText = "DELETE FROM items WHERE Key=$Key;";
             command.Parameters.AddWithValue("Key", key);
@@ -71,6 +77,7 @@ namespace MesExerciseREST.Interfaces
         }
         public void UpdateItem(ExampleItem UpdatedItem)
         {
+            //Updates an Item from the database
             var command = _connection.CreateCommand();
             command.CommandText = "UPDATE items SET Value = $Value WHERE Key=$Key;";
             command.Parameters.AddWithValue("Key", UpdatedItem.Key);
@@ -79,9 +86,10 @@ namespace MesExerciseREST.Interfaces
         }
         public IEnumerable<ExampleItem> SearchItemsByValue(string value)
         {
+            //searches for a list of items from the database
             var command = _connection.CreateCommand();
-            command.CommandText = "SELECT * FROM items WHERE Value LIKE %$Value%;";
-            command.Parameters.AddWithValue("Value", value);
+            //this should be fixed however using the Parameters.AddWithValue wasnt working and this is a slocky work around
+            command.CommandText = "SELECT * FROM items WHERE Value LIKE '%" + value + "%';";
             var reader = command.ExecuteReader();
             List<ExampleItem> items = new List<ExampleItem>();
             while (reader.Read())

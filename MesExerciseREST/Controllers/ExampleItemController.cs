@@ -7,16 +7,22 @@ namespace MesExerciseREST.Controllers
     [Route("apiv1")]
     public class ExampleItemController : Controller
     {
+        //Rather then the API directly interfacing with the Database a interface class is used.
         InterfaceBase _interface;
         public ExampleItemController(SqliteInterface LiteInterface,EntitiyFrameworkInterface EntryInterface)
         {
-            _interface = EntryInterface;
+            //for setting what version of the interface to be used should be done via appsettings.
+            //this is a todo item for now will simply comment out what interface not to use
+            _interface = LiteInterface;
+            // _interface = EntryInterface;
         }
 
         [Route("GetItemByKey/{key}")]
         [HttpGet]
         public ActionResult<ExampleItem> GetItemByKey(string key)
         {
+            //the API is responsible for ensuring that a requst is good before throwing it down to the interface
+            //this is done because the API needs to inform the end user of any errors. 
             if (_interface.DoesItemExist(key))
             {
                 return Ok(_interface.GetItem(key));
@@ -31,6 +37,7 @@ namespace MesExerciseREST.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ExampleItem>> SearchItemsByValue(string value)
         {
+            //No error handeling here as there will always be some result
             return Ok(_interface.SearchItemsByValue(value));
         }
 
